@@ -36,7 +36,7 @@ workflow library {
 
     call picard.MarkDuplicates as markdup {
         input:
-            input_bams = readgroup.bamFile,
+            input_bams = select_all(readgroup.bamFile),
             output_bam_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam",
             metrics_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.metrics"
     }
