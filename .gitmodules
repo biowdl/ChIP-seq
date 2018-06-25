@@ -1,3 +1,6 @@
 [submodule "QC"]
 	path = QC
 	url = https://github.com/biowdl/QC.git
+[submodule "aligning"]
+	path = aligning
+	url = https://github.com/biowdl/aligning.git
