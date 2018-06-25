@@ -61,7 +61,7 @@ workflow readgroup {
     output {
         File inputR1 = configValues.R1
         File inputR2 = configValues.R2
-        Array[File] bamFile = mapping.bamFile
-        Array[File] bamIndexFile = mapping.bamIndexFile
+        File bamFile = mapping.bamFile
+        File bamIndexFile = mapping.bamIndexFile
     }
 }
