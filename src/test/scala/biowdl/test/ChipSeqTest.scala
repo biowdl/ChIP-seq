@@ -31,5 +31,4 @@ class ChipSeqTest
     extends ChipSeqSuccess
     with TestReference
     with Wgs1PairedEnd
-    with Wgs2PairedEnd {
-}
+    with Wgs2PairedEnd {}
