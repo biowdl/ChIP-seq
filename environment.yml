@@ -15,4 +15,4 @@ dependencies:
   - bwa==0.7.17
   - biopet-seqstat==0.1
   - biopet-validatefastq==0.1.1
-  - macs2==2.1.1.20160309q
+  - macs2==2.1.1.20160309
