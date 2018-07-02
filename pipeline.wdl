@@ -1,5 +1,6 @@
 import "sample.wdl" as sampleWorkflow
 import "tasks/biopet.wdl" as biopet
+import "tasks/macs2.wdl" as macs2
 
 workflow pipeline {
     Array[File] sampleConfigFiles

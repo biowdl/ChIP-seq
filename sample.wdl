@@ -1,5 +1,6 @@
 import "library.wdl" as libraryWorkflow
 import "tasks/biopet.wdl" as biopet
+import "tasks/macs2.wdl" as macs2
 
 workflow sample {
     Array[File] sampleConfigs
@@ -33,7 +34,15 @@ workflow sample {
         }
     }
 
+    call macs2.PeakCalling as peakcalling {
+        input:
+            bamFiles = select_all(library.bamFile),
+            outDir = outputDir,
+            sampleName = sampleId
+    }
+
     output {
         Array[String] libraries = read_lines(librariesConfigs.keysFile)
+        File peakFile = peakcalling.peakFile
     }
 }
