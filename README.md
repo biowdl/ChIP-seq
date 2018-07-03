@@ -1,1 +1,1 @@
-# wdl-multisample
+# ChIP-seq pipeline
