@@ -4,3 +4,6 @@
 [submodule "aligning"]
 	path = aligning
 	url = https://github.com/biowdl/aligning.git
+[submodule "tasks"]
+	path = tasks
+	url = git@github.com:biowdl/tasks.git
