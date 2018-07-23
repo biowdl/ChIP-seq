@@ -38,7 +38,7 @@ workflow sample {
     call macs2.PeakCalling as peakcalling {
         input:
             bamFiles = select_all(library.bamFile),
-            outDir = outputDir,
+            outDir = outputDir + "/macs2",
             sampleName = sampleId,
             nomodel = nomodel
     }
