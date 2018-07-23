@@ -9,6 +9,7 @@ workflow sample {
     File refFasta
     File refDict
     File refFastaIndex
+    Boolean? nomodel
 
     call biopet.SampleConfig as librariesConfigs {
         input:
@@ -38,7 +39,8 @@ workflow sample {
         input:
             bamFiles = select_all(library.bamFile),
             outDir = outputDir,
-            sampleName = sampleId
+            sampleName = sampleId,
+            nomodel = nomodel
     }
 
     output {
