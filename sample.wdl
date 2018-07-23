@@ -9,6 +9,7 @@ workflow sample {
     File refFasta
     File refDict
     File refFastaIndex
+    Boolean? nomodel
 
     call biopet.SampleConfig as librariesConfigs {
         input:
@@ -37,8 +38,9 @@ workflow sample {
     call macs2.PeakCalling as peakcalling {
         input:
             bamFiles = select_all(library.bamFile),
-            outDir = outputDir + "/macs2",
-            sampleName = sampleId
+            outDir = outputDir,
+            sampleName = sampleId,
+            nomodel = nomodel
     }
 
     output {
