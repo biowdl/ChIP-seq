@@ -9,7 +9,7 @@ workflow sample {
     File refFasta
     File refDict
     File refFastaIndex
-    Boolean? nomodel
+    Boolean nomodel = false
 
     call biopet.SampleConfig as librariesConfigs {
         input:
