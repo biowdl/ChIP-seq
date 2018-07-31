@@ -1,15 +1,19 @@
+version 1.0
+
 import "library.wdl" as libraryWorkflow
 import "tasks/biopet.wdl" as biopet
 import "tasks/macs2.wdl" as macs2
 
 workflow sample {
-    Array[File] sampleConfigs
-    String sampleId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-    Boolean nomodel = false
+    input {
+        Array[File] sampleConfigs
+        String sampleId
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+        Boolean nomodel = false
+    }
 
     call biopet.SampleConfig as librariesConfigs {
         input:
