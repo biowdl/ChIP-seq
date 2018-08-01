@@ -5,7 +5,7 @@ version: develop
 latest: true
 ---
 
-This pipeline can be used to anaylse ChIP-seq data. It performs Quality control,
+This pipeline can be used to anaylse ChIP-seq data. It performs quality control,
 mapping and peak-calling.
 
 ## Usage
@@ -73,7 +73,7 @@ developed by [the SASC team](http://sasc.lumc.nl/).
 <p>
   <!-- Obscure e-mail address for spammers -->
 For any question related to this pipeline, please use the
-<a href='https://github.com/biowdl/germline-DNA/issues'>github issue tracker</a>
+<a href='https://github.com/biowdl/ChIP-seq/issues'>github issue tracker</a>
 or contact
  <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
 &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
