@@ -1,14 +1,18 @@
+version 1.0
+
 import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
 import "aligning/align-bwamem.wdl" as wdlMapping
 import "tasks/biopet.wdl" as biopet
 
 workflow readgroup {
-    Array[File] sampleConfigs
-    String readgroupId
-    String libraryId
-    String sampleId
-    String outputDir
+    input {
+        Array[File] sampleConfigs
+        String readgroupId
+        String libraryId
+        String sampleId
+        String outputDir
+    }
 
     call biopet.SampleConfig as config {
         input:
@@ -37,7 +41,6 @@ workflow readgroup {
             outputDir = outputDir + "/raw/R2",
             extractAdapters = true
     }
-
 
     call adapterClipping.AdapterClipping as qc {
         input:

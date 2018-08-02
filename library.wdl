@@ -1,16 +1,20 @@
+version 1.0
+
 import "readgroup.wdl" as readgroup
 import "tasks/biopet.wdl" as biopet
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 
 workflow library {
-    Array[File] sampleConfigs
-    String sampleId
-    String libraryId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
+    input{
+        Array[File] sampleConfigs
+        String sampleId
+        String libraryId
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+    }
 
     call biopet.SampleConfig as readgroupConfigs {
         input:

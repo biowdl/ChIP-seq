@@ -1,12 +1,16 @@
+version 1.0
+
 import "sample.wdl" as sampleWorkflow
 import "tasks/biopet.wdl" as biopet
 
 workflow pipeline {
-    Array[File] sampleConfigFiles
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
+    input {
+        Array[File] sampleConfigFiles
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+    }
 
     #  Reading the samples from the sample config files
     call biopet.SampleConfig as samplesConfigs {

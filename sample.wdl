@@ -1,13 +1,17 @@
+version 1.0
+
 import "library.wdl" as libraryWorkflow
 import "tasks/biopet.wdl" as biopet
 
 workflow sample {
-    Array[File] sampleConfigs
-    String sampleId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
+    input {
+        Array[File] sampleConfigs
+        String sampleId
+        String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+    }
 
     call biopet.SampleConfig as librariesConfigs {
         input:
