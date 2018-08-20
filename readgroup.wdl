@@ -23,7 +23,7 @@ workflow readgroup {
     if (defined(readgroup.R2)) {
         call qualityReport.QualityReport as qualityReportR2 {
             input:
-                read = select_first(readgroup.R2),
+                read = select_first([readgroup.R2]),
                 outputDir = outputDir + "/raw/R2",
                 extractAdapters = true
         }
