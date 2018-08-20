@@ -3,41 +3,26 @@ version 1.0
 import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
 import "aligning/align-bwamem.wdl" as wdlMapping
-import "tasks/biopet.wdl" as biopet
+import "structs.wdl" as structs
 
 workflow readgroup {
     input {
-        Array[File] sampleConfigs
-        String readgroupId
-        String libraryId
-        String sampleId
+        Sample sample
+        Library library
+        Readgroup readgroup
         String outputDir
     }
 
-    call biopet.SampleConfig as config {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            library = libraryId,
-            readgroup = readgroupId,
-            tsvOutputPath = outputDir + "/" + readgroupId + ".config.tsv",
-            keyFilePath = outputDir + "/" + readgroupId + ".config.keys"
-    }
-
-    Object configValues = if (defined(config.tsvOutput) && size(config.tsvOutput) > 0)
-        then read_map(config.tsvOutput)
-        else { "": "" }
-
     call qualityReport.QualityReport as qualityReportR1 {
         input:
-            read = configValues.R1,
+            read = readgroup.R1,
             outputDir = outputDir + "/raw/R1",
             extractAdapters = true
     }
 
     call qualityReport.QualityReport as qualityReportR2 {
         input:
-            read = configValues.R2,
+            read = readgroup.R2,
             outputDir = outputDir + "/raw/R2",
             extractAdapters = true
     }
@@ -45,8 +30,8 @@ workflow readgroup {
     call adapterClipping.AdapterClipping as qc {
         input:
             outputDir = outputDir + "/QC",
-            read1 = configValues.R1,
-            read2 = configValues.R2,
+            read1 = readgroup.R1,
+            read2 = readgroup.R2,
             adapterListRead1 = qualityReportR1.adapters,
             adapterListRead2 = qualityReportR2.adapters
     }
@@ -56,14 +41,14 @@ workflow readgroup {
             inputR1 = qc.read1afterClipping,
             inputR2 = qc.read2afterClipping,
             outputDir = outputDir + "/alignment",
-            sample = sampleId,
-            library = libraryId,
-            readgroup = readgroupId
+            sample = sample.id,
+            library = library.id,
+            readgroup = readgroup.id
     }
 
     output {
-        File inputR1 = configValues.R1
-        File inputR2 = configValues.R2
+        File inputR1 = readgroup.R1
+        File inputR2 = readgroup.R2
         File bamFile = mapping.bamFile
         File bamIndexFile = mapping.bamIndexFile
     }
