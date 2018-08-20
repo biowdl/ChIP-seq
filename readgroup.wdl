@@ -12,10 +12,7 @@ workflow Readgroup {
         Library library
         Readgroup readgroup
         String outputDir
-        File refFasta
-        File refDict
-        File refFastaIndex
-        BwaIndex bwaIndex
+        GeneralInput generalInput
     }
 
     call qualityReport.QualityReport as qualityReportR1 {
@@ -51,7 +48,7 @@ workflow Readgroup {
             sample = sample.id,
             library = library.id,
             readgroup = readgroup.id,
-            bwaIndex = bwaIndex
+            bwaIndex = generalInput.bwaIndex
     }
 
     output {

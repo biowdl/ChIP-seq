@@ -4,30 +4,23 @@ import "readgroup.wdl" as readgroupWorkflow
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 import "structs.wdl" as structs
-import "tasks/bwa.wdl" as bwa
 
 workflow Library {
     input {
         Sample sample
         Library library
         String outputDir
-        File refFasta
-        File refDict
-        File refFastaIndex
-        BwaIndex bwaIndex
+        GeneralInput generalInput
     }
 
     scatter (rg in library.readgroups) {
         call readgroupWorkflow.Readgroup as readgroupWorkflow {
             input:
-                refFasta = refFasta,
-                refDict = refDict,
-                refFastaIndex = refFastaIndex,
+                generalInput = generalInput,
                 outputDir = outputDir + "/rg_" + rg.id,
                 sample = sample,
                 library = library,
-                readgroup = rg,
-                bwaIndex = bwaIndex
+                readgroup = rg
         }
     }
 
