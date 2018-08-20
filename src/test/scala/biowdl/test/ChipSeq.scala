@@ -33,7 +33,7 @@ trait ChipSeq extends MultisamplePipeline with Reference {
     super.inputs ++
       Map(
         "pipeline.outputDir" -> outputDir.getAbsolutePath,
-        "generalInput" -> Map(
+        "pipeline.generalInput" -> Map(
           "bwaIndex" -> Map(
             "fastaFile" -> bwaMemFasta
               .getOrElse(throw new IllegalStateException),
