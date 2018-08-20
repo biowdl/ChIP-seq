@@ -20,11 +20,13 @@ workflow readgroup {
             extractAdapters = true
     }
 
-    call qualityReport.QualityReport as qualityReportR2 {
-        input:
-            read = readgroup.R2,
-            outputDir = outputDir + "/raw/R2",
-            extractAdapters = true
+    if (defined(readgroup.R2)) {
+        call qualityReport.QualityReport as qualityReportR2 {
+            input:
+                read = select_first(readgroup.R2),
+                outputDir = outputDir + "/raw/R2",
+                extractAdapters = true
+        }
     }
 
     call adapterClipping.AdapterClipping as qc {
@@ -48,7 +50,7 @@ workflow readgroup {
 
     output {
         File inputR1 = readgroup.R1
-        File inputR2 = readgroup.R2
+        File? inputR2 = readgroup.R2
         File bamFile = mapping.bamFile
         File bamIndexFile = mapping.bamIndexFile
     }
