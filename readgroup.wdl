@@ -4,13 +4,18 @@ import "QC/AdapterClipping.wdl" as adapterClipping
 import "QC/QualityReport.wdl" as qualityReport
 import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
+import "tasks/bwa.wdl" as bwa
 
-workflow readgroup {
+workflow Readgroup {
     input {
         Sample sample
         Library library
         Readgroup readgroup
         String outputDir
+        File refFasta
+        File refDict
+        File refFastaIndex
+        BwaIndex bwaIndex
     }
 
     call qualityReport.QualityReport as qualityReportR1 {
@@ -38,20 +43,21 @@ workflow readgroup {
             adapterListRead2 = qualityReportR2.adapters
     }
 
-    call wdlMapping.AlignBwaMem as mapping {
+    call wdlMapping.AlignBwaMem as alignBwaMem {
         input:
             inputR1 = qc.read1afterClipping,
             inputR2 = qc.read2afterClipping,
             outputDir = outputDir + "/alignment",
             sample = sample.id,
             library = library.id,
-            readgroup = readgroup.id
+            readgroup = readgroup.id,
+            bwaIndex = bwaIndex
     }
 
     output {
         File inputR1 = readgroup.R1
         File? inputR2 = readgroup.R2
-        File bamFile = mapping.bamFile
-        File bamIndexFile = mapping.bamIndexFile
+        File bamFile = alignBwaMem.bamFile
+        File bamIndexFile = alignBwaMem.bamIndexFile
     }
 }

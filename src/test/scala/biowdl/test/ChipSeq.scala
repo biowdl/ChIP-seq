@@ -36,10 +36,12 @@ trait ChipSeq extends MultisamplePipeline with Reference {
         "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
         "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
         "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        "pipeline.sample.library.readgroup.mapping.bwaMem.referenceFasta" -> bwaMemFasta
-          .getOrElse(throw new IllegalStateException),
-        "pipeline.sample.library.readgroup.mapping.bwaMem.indexFiles" -> bwaMemIndexFiles
-          .map(_.getAbsolutePath)
+        "pipeline.bwaIndex" -> Map(
+          "fastaFile" -> bwaMemFasta
+            .getOrElse(throw new IllegalStateException),
+          "indexFiles" -> bwaMemIndexFiles
+            .map(_.getAbsolutePath)
+        )
       )
 
   def startFile: File = new File("./pipeline.wdl")

@@ -1,25 +1,33 @@
 version 1.0
 
-import "readgroup.wdl" as readgroup
+import "readgroup.wdl" as readgroupWorkflow
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 import "structs.wdl" as structs
+import "tasks/bwa.wdl" as bwa
 
-workflow library {
-    input{
+workflow Library {
+    input {
         Sample sample
         Library library
         String outputDir
         File refFasta
         File refDict
         File refFastaIndex
+        BwaIndex bwaIndex
     }
 
     scatter (rg in library.readgroups) {
-        call readgroupWorkflow.readgroup as readgroupWorkflow {
+        call readgroupWorkflow.Readgroup as readgroupWorkflow {
             input:
-                outputDir = outputDir + "/rg_" + readgroup.id,
-                readgroup = readgroup
+                refFasta = refFasta,
+                refDict = refDict,
+                refFastaIndex = refFastaIndex,
+                outputDir = outputDir + "/rg_" + rg.id,
+                sample = sample,
+                library = library,
+                readgroup = rg,
+                bwaIndex = bwaIndex
         }
     }
 
