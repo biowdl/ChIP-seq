@@ -23,7 +23,7 @@ workflow Sample {
 
     call macs2.PeakCalling as peakcalling {
         input:
-            bamFiles = select_all(libraryWorkflow.bamFile),
+            bamFiles = libraryWorkflow.bamFile,
             outDir = outputDir + "/macs2",
             sampleName = sample.id
     }
