@@ -1,34 +1,34 @@
+version 1.0
+
 import "sample.wdl" as sampleWorkflow
+import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
 
 workflow pipeline {
-    Array[File] sampleConfigFiles
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-
-    #  Reading the samples from the sample config files
-    call biopet.SampleConfig as samplesConfigs {
-        input:
-            inputFiles = sampleConfigFiles,
-            keyFilePath = outputDir + "/config.keys"
+    input {
+        Array[File] sampleConfigFiles
+        String outputDir
+        ChipSeqInput chipSeqInput
     }
 
-    # Running sample subworkflow
-    scatter (sm in read_lines(samplesConfigs.keysFile)) {
-        call sampleWorkflow.sample as sample {
+    call biopet.SampleConfigCromwellArrays as configFile {
+      input:
+        inputFiles = sampleConfigFiles,
+        outputPath = "samples.json"
+    }
+
+    Root config = read_json(configFile.outputFile)
+
+    scatter (sample in config.samples) {
+        call sampleWorkflow.Sample as sampleTasks {
             input:
-                outputDir = outputDir + "/samples/" + sm,
-                sampleConfigs = sampleConfigFiles,
-                sampleId = sm,
-                refFasta = refFasta,
-                refDict = refDict,
-                refFastaIndex = refFastaIndex
+                chipSeqInput = chipSeqInput,
+                sample = sample,
+                outputDir = outputDir + "/samples/" + sample.id
         }
     }
 
     output {
-        Array[String] samples = read_lines(samplesConfigs.keysFile)
+
     }
 }

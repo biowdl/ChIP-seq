@@ -1,54 +1,43 @@
-import "readgroup.wdl" as readgroup
-import "tasks/biopet.wdl" as biopet
+version 1.0
+
+import "readgroup.wdl" as readgroupWorkflow
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
+import "structs.wdl" as structs
 
-workflow library {
-    Array[File] sampleConfigs
-    String sampleId
-    String libraryId
-    String outputDir
-    File refFasta
-    File refDict
-    File refFastaIndex
-
-    call biopet.SampleConfig as readgroupConfigs {
-        input:
-            inputFiles = sampleConfigs,
-            sample = sampleId,
-            library = libraryId,
-            tsvOutputPath = outputDir + "/" + libraryId + ".config.tsv",
-            keyFilePath = outputDir + "/" + libraryId + ".config.keys"
+workflow Library {
+    input {
+        Sample sample
+        Library library
+        String outputDir
+        ChipSeqInput chipSeqInput
     }
 
-    scatter (rg in read_lines(readgroupConfigs.keysFile)) {
-        if (rg != "") {
-            call readgroup.readgroup as readgroup {
-                input:
-                    outputDir = outputDir + "/rg_" + rg,
-                    sampleConfigs = sampleConfigs,
-                    readgroupId = rg,
-                    libraryId = libraryId,
-                    sampleId = sampleId
-            }
+    scatter (rg in library.readgroups) {
+        call readgroupWorkflow.Readgroup as readgroupWorkflow {
+            input:
+                chipSeqInput = chipSeqInput,
+                outputDir = outputDir + "/rg_" + rg.id,
+                sample = sample,
+                library = library,
+                readgroup = rg
         }
     }
 
     call picard.MarkDuplicates as markdup {
         input:
-            input_bams = select_all(readgroup.bamFile),
-            output_bam_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.bam",
-            metrics_path = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.metrics"
+            input_bams = readgroupWorkflow.bamFile,
+            output_bam_path = outputDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
+            metrics_path = outputDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
     }
 
     call samtools.Flagstat as flagstat {
         input:
             inputBam = markdup.output_bam,
-            outputPath = outputDir + "/" + sampleId + "-" + libraryId + ".markdup.flagstat"
+            outputPath = outputDir + "/" + sample.id + "-" + library.id + ".markdup.flagstat"
     }
 
     output {
-        Array[String] readgroups = read_lines(readgroupConfigs.keysFile)
         File bamFile = markdup.output_bam
         File bamIndexFile = markdup.output_bam_index
     }
