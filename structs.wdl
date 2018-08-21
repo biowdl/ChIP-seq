@@ -1,5 +1,8 @@
 version 1.0
 
+import "tasks/bwa.wdl" as bwa
+import "tasks/common.wdl" as common
+
 struct Readgroup {
     String id
     File R1
@@ -18,4 +21,9 @@ struct Sample {
 
 struct Root {
     Array[Sample] samples
+}
+
+struct GeneralInput {
+    Reference reference
+    BwaIndex bwaIndex
 }

@@ -33,14 +33,18 @@ trait ChipSeq extends MultisamplePipeline with Reference {
     super.inputs ++
       Map(
         "pipeline.outputDir" -> outputDir.getAbsolutePath,
-        "pipeline.refFasta" -> referenceFasta.getAbsolutePath,
-        "pipeline.refFastaIndex" -> referenceFastaIndexFile.getAbsolutePath,
-        "pipeline.refDict" -> referenceFastaDictFile.getAbsolutePath,
-        "pipeline.bwaIndex" -> Map(
-          "fastaFile" -> bwaMemFasta
-            .getOrElse(throw new IllegalStateException),
-          "indexFiles" -> bwaMemIndexFiles
-            .map(_.getAbsolutePath)
+        "pipeline.generalInput" -> Map(
+          "bwaIndex" -> Map(
+            "fastaFile" -> bwaMemFasta
+              .getOrElse(throw new IllegalStateException),
+            "indexFiles" -> bwaMemIndexFiles
+              .map(_.getAbsolutePath)
+          ),
+          "reference" -> Map(
+            "fasta" -> referenceFasta.getAbsolutePath,
+            "fai" -> referenceFastaIndexFile.getAbsolutePath,
+            "dict" -> referenceFastaDictFile.getAbsolutePath
+          )
         )
       )
 
