@@ -8,7 +8,7 @@ workflow pipeline {
     input {
         Array[File] sampleConfigFiles
         String outputDir
-        GeneralInput generalInput
+        ChipSeqInput chipSeqInput
     }
 
     call biopet.SampleConfigCromwellArrays as configFile {
@@ -22,7 +22,7 @@ workflow pipeline {
     scatter (sample in config.samples) {
         call sampleWorkflow.Sample as sampleTasks {
             input:
-                generalInput = generalInput,
+                chipSeqInput = chipSeqInput,
                 sample = sample,
                 outputDir = outputDir + "/samples/" + sample.id
         }

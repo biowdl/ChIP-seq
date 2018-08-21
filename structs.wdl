@@ -23,7 +23,7 @@ struct Root {
     Array[Sample] samples
 }
 
-struct GeneralInput {
+struct ChipSeqInput {
     Reference reference
     BwaIndex bwaIndex
 }

@@ -12,7 +12,7 @@ workflow Readgroup {
         Library library
         Readgroup readgroup
         String outputDir
-        GeneralInput generalInput
+        ChipSeqInput chipSeqInput
     }
 
     call qualityReport.QualityReport as qualityReportR1 {
@@ -48,7 +48,7 @@ workflow Readgroup {
             sample = sample.id,
             library = library.id,
             readgroup = readgroup.id,
-            bwaIndex = generalInput.bwaIndex
+            bwaIndex = chipSeqInput.bwaIndex
     }
 
     output {

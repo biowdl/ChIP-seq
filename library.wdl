@@ -10,13 +10,13 @@ workflow Library {
         Sample sample
         Library library
         String outputDir
-        GeneralInput generalInput
+        ChipSeqInput chipSeqInput
     }
 
     scatter (rg in library.readgroups) {
         call readgroupWorkflow.Readgroup as readgroupWorkflow {
             input:
-                generalInput = generalInput,
+                chipSeqInput = chipSeqInput,
                 outputDir = outputDir + "/rg_" + rg.id,
                 sample = sample,
                 library = library,

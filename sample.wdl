@@ -7,13 +7,13 @@ workflow Sample {
     input {
         Sample sample
         String outputDir
-        GeneralInput generalInput
+        ChipSeqInput chipSeqInput
     }
 
     scatter (library in sample.libraries) {
         call libraryWorkflow.Library as libraryWorkflow {
             input:
-                generalInput = generalInput,
+                chipSeqInput = chipSeqInput,
                 outputDir = outputDir + "/lib_" + library.id,
                 sample = sample,
                 library = library
