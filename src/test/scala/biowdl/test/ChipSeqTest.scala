@@ -21,14 +21,11 @@
 
 package biowdl.test
 
-import java.io.File
-
-import nl.biopet.utils.biowdl.fixtureFile
 import nl.biopet.utils.biowdl.references.TestReference
-import nl.biopet.utils.biowdl.samples.{Wgs1PairedEnd, Wgs2PairedEnd}
+import nl.biopet.utils.biowdl.samples.{Chip1PairedEnd, Chip2PairedEnd}
 
 class ChipSeqTest
     extends ChipSeqSuccess
     with TestReference
-    with Wgs1PairedEnd
-    with Wgs2PairedEnd {}
+    with Chip1PairedEnd
+    with Chip2PairedEnd {}
