@@ -16,3 +16,4 @@ dependencies:
   - biopet-seqstat==0.1
   - biopet-validatefastq==0.1.1
   - macs2==2.1.1.20160309
+  - fontconfig==2.11.1
