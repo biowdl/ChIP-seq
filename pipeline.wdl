@@ -3,7 +3,6 @@ version 1.0
 import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
 import "tasks/biopet.wdl" as biopet
-import "tasks/macs2.wdl" as macs2
 
 workflow pipeline {
     input {
