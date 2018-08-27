@@ -1,9 +1,12 @@
 [submodule "QC"]
+    branch = develop
 	path = QC
 	url = https://github.com/biowdl/QC.git
 [submodule "aligning"]
+    branch = develop
 	path = aligning
 	url = https://github.com/biowdl/aligning.git
 [submodule "tasks"]
+    branch = develop
 	path = tasks
 	url = https://github.com/biowdl/tasks.git
