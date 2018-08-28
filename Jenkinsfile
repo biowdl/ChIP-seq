@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh 'java -version'
                 checkout scm
-                sh 'git submodule update --init --recursive --remote'
+                sh 'git submodule update --init --recursive'
                 script {
                     def sbtHome = tool 'sbt 1.0.4'
                     env.outputDir= "${OUTPUT_DIR}/${JOB_NAME}/${BUILD_NUMBER}"
@@ -32,6 +32,16 @@ pipeline {
                 }
                 sh "rm -rf ${outputDir}"
                 sh "mkdir -p ${outputDir}"
+            }
+        }
+
+        stage('Submodules develop') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                sh 'git submodule foreach --recursive git checkout develop'
+                sh 'git submodule foreach --recursive git pull'
             }
         }
 
