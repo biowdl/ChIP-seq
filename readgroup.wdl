@@ -51,9 +51,9 @@ workflow Readgroup {
             inputR1 = qc.read1afterQC,
             inputR2 = qc.read2afterQC,
             outputDir = outputDir,
-            sample = sample.id,
-            library = library.id,
-            readgroup = readgroup.id,
+            sample = sampleId,
+            library = libraryId,
+            readgroup = readgroupId,
             bwaIndex = chipSeqInput.bwaIndex
     }
 
