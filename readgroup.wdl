@@ -1,7 +1,6 @@
 version 1.0
 
-import "QC/AdapterClipping.wdl" as adapterClipping
-import "QC/QualityReport.wdl" as qualityReport
+import "QC/QC.wdl" as qcWorkflow
 import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
@@ -15,36 +14,42 @@ workflow Readgroup {
         ChipSeqInput chipSeqInput
     }
 
-    call qualityReport.QualityReport as qualityReportR1 {
-        input:
-            read = readgroup.R1,
-            outputDir = outputDir + "/raw/R1",
-            extractAdapters = true
-    }
+    # FIXME: workaround for namepace issue in cromwell
+    String sampleId = sample.id
+    String libraryId = library.id
+    String readgroupId = readgroup.id
 
-    if (defined(readgroup.R2)) {
-        call qualityReport.QualityReport as qualityReportR2 {
+    if (defined(readgroup.R1_md5)) {
+        call common.CheckFileMD5 as md5CheckR1 {
             input:
-                read = select_first([readgroup.R2]),
-                outputDir = outputDir + "/raw/R2",
-                extractAdapters = true
+                file = readgroup.R1,
+                MD5sum = select_first([readgroup.R1_md5])
         }
     }
 
-    call adapterClipping.AdapterClipping as qc {
+    if (defined(readgroup.R2)) {
+        call common.CheckFileMD5 as md5CheckR2 {
+            input:
+                file = select_first([readgroup.R2]),
+                MD5sum = select_first([readgroup.R2_md5])
+        }
+    }
+
+    call qcWorkflow.QC as qc {
         input:
-            outputDir = outputDir + "/QC",
+            outputDir = outputDir,
             read1 = readgroup.R1,
             read2 = readgroup.R2,
-            adapterListRead1 = qualityReportR1.adapters,
-            adapterListRead2 = qualityReportR2.adapters
+            sample = sampleId,
+            library = libraryId,
+            readgroup = readgroupId
     }
 
     call wdlMapping.AlignBwaMem as alignBwaMem {
         input:
-            inputR1 = qc.read1afterClipping,
-            inputR2 = qc.read2afterClipping,
-            outputDir = outputDir + "/alignment",
+            inputR1 = qc.read1afterQC,
+            inputR2 = qc.read2afterQC,
+            outputDir = outputDir,
             sample = sample.id,
             library = library.id,
             readgroup = readgroup.id,
@@ -54,6 +59,8 @@ workflow Readgroup {
     output {
         File inputR1 = readgroup.R1
         File? inputR2 = readgroup.R2
+        File cleanR1 = qc.read1afterQC
+        File? cleanR2 = qc.read2afterQC
         File bamFile = alignBwaMem.bamFile
         File bamIndexFile = alignBwaMem.bamIndexFile
     }
