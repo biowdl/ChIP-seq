@@ -4,6 +4,7 @@ import "QC/QC.wdl" as qcWorkflow
 import "aligning/align-bwamem.wdl" as wdlMapping
 import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
+import "tasks/common.wdl" as common
 
 workflow Readgroup {
     input {
