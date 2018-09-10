@@ -24,7 +24,17 @@ package biowdl.test
 import java.io.File
 
 import nl.biopet.utils.biowdl.PipelineSuccess
+import nl.biopet.utils.biowdl.multisample.Library
+import org.testng.annotations.Test
 
 trait ChipSeqSuccess extends ChipSeq with PipelineSuccess {
+
+  @Test(dataProvider = "libraries")
+  def testMetrics(library: Library): Unit = {
+    val metricsDir = new File(libraryDir(library), "metrics")
+    metricsDir should exist
+    metricsDir.isDirectory shouldBe true
+  }
+
   //TODO: add tests
 }
