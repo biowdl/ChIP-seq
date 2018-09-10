@@ -4,6 +4,7 @@ import "readgroup.wdl" as readgroupWorkflow
 import "tasks/picard.wdl" as picard
 import "tasks/samtools.wdl" as samtools
 import "structs.wdl" as structs
+import "BamMetrics/bammetrics.wdl" as bammetrics
 
 workflow Library {
     input {
@@ -31,10 +32,14 @@ workflow Library {
             metrics_path = outputDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
     }
 
-    call samtools.Flagstat as flagstat {
+    call bammetrics.BamMetrics as BamMetrics {
         input:
-            inputBam = markdup.output_bam,
-            outputPath = outputDir + "/" + sample.id + "-" + library.id + ".markdup.flagstat"
+            bamFile = markdup.output_bam,
+            bamIndex = markdup.output_bam_index,
+            outputDir = outputDir + "/metrics",
+            refFasta = chipSeqInput.reference.fasta,
+            refDict = chipSeqInput.reference.dict,
+            refFastaIndex = chipSeqInput.reference.fai
     }
 
     output {
