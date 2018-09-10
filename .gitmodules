@@ -10,3 +10,7 @@
     branch = develop
 	path = tasks
 	url = https://github.com/biowdl/tasks.git
+[submodule "BamMetrics"]
+    branch = develop
+	path = BamMetrics
+	url = https://github.com/biowdl/BamMetrics.git
