@@ -28,4 +28,6 @@ class ChipSeqTest
     extends ChipSeqSuccess
     with TestReference
     with Chip1PairedEnd
-    with Chip2PairedEnd {}
+    with Chip2PairedEnd {
+  override def inputs: Map[String, Any] = super.inputs + ("pipeline.sampleTasks.peakcalling.nomodel" -> true)
+}
