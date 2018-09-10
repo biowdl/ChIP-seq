@@ -2,6 +2,7 @@ version 1.0
 
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
+import "tasks/macs2.wdl" as macs2
 
 workflow Sample {
     input {
@@ -20,7 +21,14 @@ workflow Sample {
             }
         }
 
-    output {
+    call macs2.PeakCalling as peakcalling {
+        input:
+            bamFiles = libraryWorkflow.bamFile,
+            outDir = outputDir + "/macs2",
+            sampleName = sample.id
+    }
 
+    output {
+        File peakFile = peakcalling.peakFile
     }
 }
