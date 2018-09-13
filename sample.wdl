@@ -18,12 +18,16 @@ workflow Sample {
                 outputDir = outputDir + "/lib_" + library.id,
                 sample = sample,
                 library = library
-            }
         }
+
+        File bamFiles = libraryWorkflow.bamFile.file
+        File indexFiles = libraryWorkflow.bamFile.index
+    }
 
     call macs2.PeakCalling as peakcalling {
         input:
-            bamFiles = libraryWorkflow.bamFile,
+            inputBams = bamFiles,
+            inputBamsIndex = indexFiles,
             outDir = outputDir + "/macs2",
             sampleName = sample.id
     }
