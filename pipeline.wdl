@@ -2,7 +2,7 @@ version 1.0
 
 import "sample.wdl" as sampleWorkflow
 import "structs.wdl" as structs
-import "tasks/biopet.wdl" as biopet
+import "tasks/biopet/sampleconfig.wdl" as biopetSampleConfig
 
 workflow pipeline {
     input {
@@ -11,7 +11,7 @@ workflow pipeline {
         ChipSeqInput chipSeqInput
     }
 
-    call biopet.SampleConfigCromwellArrays as configFile {
+    call biopetSampleConfig.SampleConfigCromwellArrays as configFile {
       input:
         inputFiles = sampleConfigFiles,
         outputPath = "samples.json"

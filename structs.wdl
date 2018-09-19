@@ -5,10 +5,7 @@ import "tasks/common.wdl" as common
 
 struct Readgroup {
     String id
-    File R1
-    File? R1_md5
-    File? R2
-    File? R2_md5
+    FastqPair reads
 }
 
 struct Library {

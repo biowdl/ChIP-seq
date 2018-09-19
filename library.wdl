@@ -23,27 +23,26 @@ workflow Library {
                 library = library,
                 readgroup = rg
         }
+        File readgroupBamFiles = readgroupWorkflow.bamFile.file
+        File readgroupBamIndexes = readgroupWorkflow.bamFile.index
     }
 
     call picard.MarkDuplicates as markdup {
         input:
-            input_bams = readgroupWorkflow.bamFile,
-            output_bam_path = outputDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
-            metrics_path = outputDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
+            inputBams = readgroupBamFiles,
+            inputBamIndexes = readgroupBamIndexes,
+            outputBamPath = outputDir + "/" + sample.id + "-" + library.id + ".markdup.bam",
+            metricsPath = outputDir + "/" + sample.id + "-" + library.id + ".markdup.metrics"
     }
 
     call bammetrics.BamMetrics as BamMetrics {
         input:
-            bamFile = markdup.output_bam,
-            bamIndex = markdup.output_bam_index,
+            bam = markdup.outputBam,
             outputDir = outputDir + "/metrics",
-            refFasta = chipSeqInput.reference.fasta,
-            refDict = chipSeqInput.reference.dict,
-            refFastaIndex = chipSeqInput.reference.fai
+            reference = chipSeqInput.reference
     }
 
     output {
-        File bamFile = markdup.output_bam
-        File bamIndexFile = markdup.output_bam_index
+        IndexedBamFile bamFile = markdup.outputBam
     }
 }
