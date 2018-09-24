@@ -28,7 +28,6 @@ workflow pipeline {
                 control = sample.control,
                 outputDir = outputDir + "/samples/" + sample.id
         }
-        Pair[String, SampleResults] sampleToBam = {sample.id: sampleTasks.sampleResults}
     }
 
     ## Peakcalling

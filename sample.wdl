@@ -24,5 +24,6 @@ workflow Sample {
     output {
         #IndexedBamFile bamFile = libraryWorkflow.bamFile
         SampleResults sampleResults = {"bam": libraryWorkflow.bamFile, "control": control}
+        Pair[String, SampleResults] sampleToBam = {sample.id: sampleResults}
     }
 }
