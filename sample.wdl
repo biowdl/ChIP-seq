@@ -2,7 +2,6 @@ version 1.0
 
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
-import "tasks/macs2.wdl" as macs2
 
 workflow Sample {
     input {
