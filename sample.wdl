@@ -24,6 +24,6 @@ workflow Sample {
 
     output {
         #IndexedBamFile bamFile = libraryWorkflow.bamFile
-        sampleResults sampleResults = {"bam": libraryWorkflow.bamFile, "control": control}
+        SampleResults sampleResults = {"bam": libraryWorkflow.bamFile, "control": control}
     }
 }
