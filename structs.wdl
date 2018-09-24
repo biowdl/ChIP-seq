@@ -15,6 +15,7 @@ struct Library {
 
 struct Sample {
     String id
+    String? control
     Array[Library] libraries
 }
 
@@ -25,4 +26,9 @@ struct Root {
 struct ChipSeqInput {
     Reference reference
     BwaIndex bwaIndex
+}
+
+struct SampleResults {
+    IndexedBamFile bam
+    String? control
 }

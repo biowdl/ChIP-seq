@@ -24,9 +24,45 @@ workflow pipeline {
             input:
                 chipSeqInput = chipSeqInput,
                 sample = sample,
+                control = sample.control,
                 outputDir = outputDir + "/samples/" + sample.id
         }
+        Pair[String, SampleResults] sampleToBam = {sample.id: sampleTasks.sampleResults}
     }
+
+    ## Peakcalling
+    scatter (sample in sampleTasks.sampleToBam) {
+        if (defined(sample.right.control)) {
+            String controlID = sample.right.control
+            File inputBams = sample.right.bam.file
+            File inputBamsIndex = sample.right.bam.index
+            scatter (sample2 in sampleTasks.sampleToBam) {
+                if (controlID == sample2.left) {
+                    call macs2.PeakCalling as peakcalling {
+                        input:
+                            inputBams = inputBams,
+                            inputBamsIndex = inputBamsIndex,
+                            controlBams = sample2.right.bam.file,
+                            controlBamsIndex = sample2.right.bam.index,
+                            outDir = outputDir + "/macs2",
+                            sampleName = sample.left
+                    }
+                }
+            }
+        }
+        if (!defined(sample.right.control)) {
+            call macs2.PeakCalling as peakcalling {
+                input:
+                     inputBams = inputBams,
+                     inputBamsIndex = inputBamsIndex,
+                     outDir = outputDir + "/macs2",
+                     sampleName = sample.left
+            }
+        }
+        File peakFile = peakcalling.peakFile
+    }
+
+
 
     output {
 

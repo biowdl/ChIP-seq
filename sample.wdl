@@ -7,6 +7,7 @@ import "tasks/macs2.wdl" as macs2
 workflow Sample {
     input {
         Sample sample
+        Sample? control
         String outputDir
         ChipSeqInput chipSeqInput
     }
@@ -19,20 +20,10 @@ workflow Sample {
                 sample = sample,
                 library = library
         }
-
-        File bamFiles = libraryWorkflow.bamFile.file
-        File indexFiles = libraryWorkflow.bamFile.index
-    }
-
-    call macs2.PeakCalling as peakcalling {
-        input:
-            inputBams = bamFiles,
-            inputBamsIndex = indexFiles,
-            outDir = outputDir + "/macs2",
-            sampleName = sample.id
     }
 
     output {
-        File peakFile = peakcalling.peakFile
+        #IndexedBamFile bamFile = libraryWorkflow.bamFile
+        sampleResults sampleResults = {"bam": libraryWorkflow.bamFile, "control": control}
     }
 }
