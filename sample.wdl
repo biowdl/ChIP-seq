@@ -6,7 +6,6 @@ import "structs.wdl" as structs
 workflow Sample {
     input {
         Sample sample
-        Sample? control
         String outputDir
         ChipSeqInput chipSeqInput
     }
@@ -22,8 +21,8 @@ workflow Sample {
     }
 
     output {
-        #IndexedBamFile bamFile = libraryWorkflow.bamFile
-        SampleResults sampleResults = {"bam": libraryWorkflow.bamFile, "control": control}
-        Pair[String, SampleResults] sampleToBam = (sample.id, sampleResults)
+        SampleResults sampleResults = {"sampleID":sample.id,
+                                       "bam": libraryWorkflow.bamFile,
+                                       "controlID": sample.control}
     }
 }

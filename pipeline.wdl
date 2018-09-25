@@ -25,46 +25,38 @@ workflow pipeline {
             input:
                 chipSeqInput = chipSeqInput,
                 sample = sample,
-                control = sample.control,
                 outputDir = outputDir + "/samples/" + sample.id
         }
     }
 
     ## Peakcalling
-    scatter (sample in sampleTasks.sampleToBam) {
-        if (defined(sample.right.control)) {
-            String controlID = sample.right.control
-            File inputBams = sample.right.bam.file
-            File inputBamsIndex = sample.right.bam.index
-            scatter (sample2 in sampleTasks.sampleToBam) {
-                if (controlID == sample2.left) {
-                    call macs2.PeakCalling as peakcalling {
-                        input:
-                            inputBams = inputBams,
-                            inputBamsIndex = inputBamsIndex,
-                            controlBams = sample2.right.bam.file,
-                            controlBamsIndex = sample2.right.bam.index,
-                            outDir = outputDir + "/macs2",
-                            sampleName = sample.left
-                    }
+    scatter (sample in sampleTasks.sampleResults) {
+        ## If sample has a control sample
+        if (defined(sample.controlID)) {
+            String? controlID = sample.controlID
+            ## Loop over the samples again and get the control bam files
+            scatter (sample2 in sampleTasks.sampleResults) {
+                if (controlID == sample2.sampleID) {
+                    File controlBams = sample2.bam.file
+                    File controlBamsIndex = sample2.bam.index
                 }
             }
+            File controlBams = select_first(controlBams)
+            File controlBamsIndex = select_first(controlBamsIndex)
         }
-        if (!defined(sample.right.control)) {
-            call macs2.PeakCalling as peakcalling {
-                input:
-                     inputBams = inputBams,
-                     inputBamsIndex = inputBamsIndex,
-                     outDir = outputDir + "/macs2",
-                     sampleName = sample.left
-            }
+
+        call macs2.PeakCalling as peakcalling {
+            input:
+                inputBams = sample.bam.file,
+                inputBamsIndex = sample.bam.index,
+                controlBams = controlBams,
+                controlBamsIndex = controlBamsIndex,
+                outDir = outputDir + "/macs2",
+                sampleName = sample.sampleID
         }
-        File peakFile = peakcalling.peakFile
-    }
-
-
+     }
 
     output {
-
+        Array[File]+ peakFile = peakcalling.peakFile
     }
 }

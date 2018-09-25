@@ -29,6 +29,16 @@ struct ChipSeqInput {
 }
 
 struct SampleResults {
+    String sampleID
     IndexedBamFile bam
-    String? control
+    String? controlID
+}
+
+struct Macs2Input {
+    String sampleID
+    String? controlID
+    File inputBams
+    File inputBamsIndex
+    File? controlBams
+    File? controlBamsIndex
 }
