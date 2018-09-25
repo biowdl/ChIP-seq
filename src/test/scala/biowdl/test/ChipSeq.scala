@@ -28,7 +28,7 @@ import nl.biopet.utils.biowdl.references.Reference
 import nl.biopet.utils.ngs.vcf.getVcfIndexFile
 
 trait ChipSeq extends MultisamplePipeline with Reference {
-
+  def nomodel: Option[Boolean] = None
   override def inputs: Map[String, Any] =
     super.inputs ++
       Map(
@@ -46,7 +46,7 @@ trait ChipSeq extends MultisamplePipeline with Reference {
             "dict" -> referenceFastaDictFile.getAbsolutePath
           )
         )
-      )
+      ) ++ nomodel.map("pipeline.peakcalling.nomodel" -> _)
 
   def startFile: File = new File("./pipeline.wdl")
 }

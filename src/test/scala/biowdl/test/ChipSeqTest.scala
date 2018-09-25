@@ -29,6 +29,5 @@ class ChipSeqTest
     with TestReference
     with Chip1PairedEnd
     with Chip2PairedEnd {
-  override def inputs: Map[String, Any] =
-    super.inputs + ("pipeline.sampleTasks.Sample.peakcalling.nomodel" -> true)
+  override def nomodel: Option[Boolean] = Some(true)
 }
