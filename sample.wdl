@@ -2,6 +2,7 @@ version 1.0
 
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
+import "tasks/common.wdl" as common
 
 workflow Sample {
     input {
@@ -21,8 +22,6 @@ workflow Sample {
     }
 
     output {
-        SampleResults sampleResults = {"sampleID":sample.id,
-                                       "bam": libraryWorkflow.bamFile,
-                                       "controlID": sample.control}
+        IndexBamFile bamFile = libraryWorkflow.bamFile
     }
 }

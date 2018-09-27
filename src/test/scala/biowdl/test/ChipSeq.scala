@@ -45,7 +45,8 @@ trait ChipSeq extends MultisamplePipeline with Reference {
             "fai" -> referenceFastaIndexFile.getAbsolutePath,
             "dict" -> referenceFastaDictFile.getAbsolutePath
           )
-        )
+        ),
+        "pipeline.caseControl.toolJar" -> "/exports/sasc/common/caseControl.jar"
       ) ++ nomodel.map("pipeline.peakcalling.nomodel" -> _)
 
   def startFile: File = new File("./pipeline.wdl")
