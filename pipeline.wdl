@@ -27,34 +27,30 @@ workflow pipeline {
                 sample = sample,
                 outputDir = outputDir + "/samples/" + sample.id
         }
+
+        File bamFiles = sampleTasks.bamFile.file
+        File indexFiles = sampleTasks.bamFile.index
     }
 
-    ## Peakcalling
-    scatter (sample in sampleTasks.sampleResults) {
-        ## If sample has a control sample
-        if (defined(sample.controlID)) {
-            String? controlID = sample.controlID
-            ## Loop over the samples again and get the control bam files
-            scatter (sample2 in sampleTasks.sampleResults) {
-                if (controlID == sample2.sampleID) {
-                    File controlBams = sample2.bam.file
-                    File controlBamsIndex = sample2.bam.index
-                }
-            }
-            File controlBams = select_first(controlBams)
-            File controlBamsIndex = select_first(controlBamsIndex)
-        }
+    call biopetSampleConfig.CaseControl as caseControl {
+        input:
+            inputFiles =  bamFiles,
+            inputIndexFiles = indexFiles,
+            sampleConfigs = sampleConfigFiles,
+            outputPath = "control.json"
+    }
 
+    scatter (control in caseControl.caseControls) {
         call macs2.PeakCalling as peakcalling {
             input:
-                inputBams = sample.bam.file,
-                inputBamsIndex = sample.bam.index,
-                controlBams = controlBams,
-                controlBamsIndex = controlBamsIndex,
+                inputBams = [control.inputBam.file],
+                inputBamsIndex = [control.inputBam.index],
+                controlBams = [control.controlBam.file],
+                controlBamsIndex = [control.controlBam.index],
                 outDir = outputDir + "/macs2",
-                sampleName = sample.sampleID
+                sampleName = control.inputName
         }
-     }
+    }
 
     output {
         Array[File]+ peakFile = peakcalling.peakFile
