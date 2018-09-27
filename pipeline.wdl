@@ -43,10 +43,10 @@ workflow pipeline {
     scatter (control in caseControl.caseControls) {
         call macs2.PeakCalling as peakcalling {
             input:
-                inputBams = control.inputBam.file,
-                inputBamsIndex = control.inputBam.index,
-                controlBams = control.controlBam.file,
-                controlBamsIndex = control.controlBam.index,
+                inputBams = [control.inputBam.file],
+                inputBamsIndex = [control.inputBam.index],
+                controlBams = [control.controlBam.file],
+                controlBamsIndex = [control.controlBam.index],
                 outDir = outputDir + "/macs2",
                 sampleName = control.inputName
         }

@@ -27,18 +27,3 @@ struct ChipSeqInput {
     Reference reference
     BwaIndex bwaIndex
 }
-
-struct SampleResults {
-    String sampleID
-    IndexedBamFile bam
-    String? controlID
-}
-
-struct Macs2Input {
-    String sampleID
-    String? controlID
-    File inputBams
-    File inputBamsIndex
-    File? controlBams
-    File? controlBamsIndex
-}
