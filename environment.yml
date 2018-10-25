@@ -1,4 +1,4 @@
-name: multsample
+name: chipseq
 channels:
   - bioconda
   - conda-forge
