@@ -1,4 +1,4 @@
-name: multsample
+name: chip-seq
 channels:
   - bioconda
   - conda-forge

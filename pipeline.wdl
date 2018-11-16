@@ -40,13 +40,13 @@ workflow pipeline {
             outputPath = "control.json"
     }
 
-    scatter (control in caseControl.caseControls) {
+    scatter (control in caseControl.caseControls.caseControls) {
         call macs2.PeakCalling as peakcalling {
             input:
-                inputBams = [control.inputBam.file],
-                inputBamsIndex = [control.inputBam.index],
-                controlBams = [control.controlBam.file],
-                controlBamsIndex = [control.controlBam.index],
+                inputBams = [control.inputFile.file],
+                inputBamsIndex = [control.inputFile.index],
+                controlBams = [control.controlFile.file],
+                controlBamsIndex = [control.controlFile.index],
                 outDir = outputDir + "/macs2",
                 sampleName = control.inputName
         }
