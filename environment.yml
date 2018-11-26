@@ -6,7 +6,7 @@ channels:
   - r
 dependencies:
   - biopet-extractadaptersfastqc==0.2
-  - biopet-sampleconfig==0.2
+  - biopet-sampleconfig==0.3
   - picard==2.18.7
   - cutadapt==1.16
   - fastqc==0.11.7
