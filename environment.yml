@@ -15,4 +15,5 @@ dependencies:
   - bwa==0.7.17
   - biopet-seqstat==1.0.1
   - biopet-validatefastq==0.1.1
+  - biopet-bamstats=1.0.1
   - fontconfig==2.11.1
