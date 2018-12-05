@@ -15,4 +15,4 @@ dependencies:
   - biopet-seqstat==1.0.1
   - biopet-validatefastq==0.1.1
   - biopet-bamstats=1.0.1
-  - r-base==3.2.2
+  - r-base==3.4.3
