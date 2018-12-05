@@ -3,7 +3,6 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - r
 dependencies:
   - biopet-extractadaptersfastqc==0.2
   - biopet-sampleconfig==0.3
@@ -17,3 +16,4 @@ dependencies:
   - biopet-validatefastq==0.1.1
   - biopet-bamstats=1.0.1
   - fontconfig==2.11.1
+  - r==3.4.3
