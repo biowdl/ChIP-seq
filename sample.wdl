@@ -2,7 +2,9 @@ version 1.0
 
 import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
-import "tasks/macs2.wdl" as macs2
+import "tasks/common.wdl" as common
+import "tasks/samtools.wdl" as samtools
+
 
 workflow Sample {
     input {
@@ -20,19 +22,23 @@ workflow Sample {
                 library = library
         }
 
-        File bamFiles = libraryWorkflow.bamFile.file
-        File indexFiles = libraryWorkflow.bamFile.index
+        File bam = libraryWorkflow.bamFile.file
     }
 
-    call macs2.PeakCalling as peakcalling {
+
+    call samtools.Merge as mergeBams {
         input:
-            inputBams = bamFiles,
-            inputBamsIndex = indexFiles,
-            outDir = outputDir + "/macs2",
-            sampleName = sample.id
+            bamFiles = bam,
+            outputBamPath = outputDir + "/" + sample.id + ".bam"
+    }
+
+    call samtools.Index as indexBams {
+        input:
+            bamFile = mergeBams.outputBam,
+            bamIndexPath = outputDir + "/" + sample.id + ".bai"
     }
 
     output {
-        File peakFile = peakcalling.peakFile
+        IndexedBamFile bamFile = indexBams.outputBam
     }
 }

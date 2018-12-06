@@ -15,6 +15,7 @@ struct Library {
 
 struct Sample {
     String id
+    String? control
     Array[Library] libraries
 }
 
