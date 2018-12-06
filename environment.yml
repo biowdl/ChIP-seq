@@ -3,10 +3,9 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - r
 dependencies:
   - biopet-extractadaptersfastqc==0.2
-  - biopet-sampleconfig==0.2
+  - biopet-sampleconfig==0.3
   - picard==2.18.7
   - cutadapt==1.16
   - fastqc==0.11.7
@@ -15,5 +14,5 @@ dependencies:
   - bwa==0.7.17
   - biopet-seqstat==1.0.1
   - biopet-validatefastq==0.1.1
-  - macs2==2.1.1.20160309
-  - fontconfig==2.11.1
+  - biopet-bamstats=1.0.1
+  - r-base==3.4.3

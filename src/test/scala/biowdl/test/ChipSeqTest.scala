@@ -21,6 +21,7 @@
 
 package biowdl.test
 
+import nl.biopet.utils.biowdl.multisample.Sample
 import nl.biopet.utils.biowdl.references.TestReference
 import nl.biopet.utils.biowdl.samples.{Chip1PairedEnd, Chip2PairedEnd}
 
@@ -29,6 +30,7 @@ class ChipSeqTest
     with TestReference
     with Chip1PairedEnd
     with Chip2PairedEnd {
-  override def inputs: Map[String, Any] =
-    super.inputs + ("pipeline.sampleTasks.Sample.peakcalling.nomodel" -> true)
+  override def nomodel: Option[Boolean] = Some(true)
+  override def samples: Map[String, Sample] =
+    addSample(super.samples, "Chip1", Map("control" -> "Chip2"))
 }
