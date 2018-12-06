@@ -10,6 +10,7 @@ workflow pipeline {
         Array[File] sampleConfigFiles
         String outputDir
         ChipSeqInput chipSeqInput
+        Int MAPQthreshold = 30
     }
 
     call biopetSampleConfig.SampleConfigCromwellArrays as configFile {
@@ -25,7 +26,8 @@ workflow pipeline {
             input:
                 chipSeqInput = chipSeqInput,
                 sample = sample,
-                outputDir = outputDir + "/samples/" + sample.id
+                outputDir = outputDir + "/samples/" + sample.id,
+                MAPQthreshold = MAPQthreshold
         }
 
         File bamFiles = sampleTasks.bamFile.file
