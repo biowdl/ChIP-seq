@@ -62,7 +62,7 @@ workflow Library {
 
     call bammetrics.BamMetrics as BamMetricsAfterFilter {
         input:
-            bam = indexFilterBam.outputFile,
+            bam = indexFilterBam.outputBam,
             outputDir = outputDir + "/metricsAfterFilter",
             reference = chipSeqInput.reference
     }
