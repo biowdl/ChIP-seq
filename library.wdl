@@ -12,6 +12,7 @@ workflow Library {
         Library library
         String outputDir
         ChipSeqInput chipSeqInput
+        Int MAPQthreshold
     }
 
     scatter (rg in library.readgroups) {
@@ -42,7 +43,24 @@ workflow Library {
             reference = chipSeqInput.reference
     }
 
+    call samtools.View as filterBam {
+        ## Remove reads unmapped, mate unmapped, not primary alignment, reads failing platform, duplicates (using
+        ## excludeFilter)
+        ## Remove multi-mapped reads (with MAPQthreshlod)
+        input:
+            inFile = markdup.outputBam.file,
+            outputFileName = outputDir + "/" + sample.id + "-" + library.id + ".filtered.bam",
+            excludeFilter = 1804,
+            MAPQthreshold = MAPQthreshold
+    }
+
+    call samtools.Index as indexFilterBam {
+        input:
+            bamFile = filterBam.outputFile,
+            bamIndexPath =  outputDir + "/" + sample.id + "-" + library.id + ".filtered.bai",
+    }
+
     output {
-        IndexedBamFile bamFile = markdup.outputBam
+        IndexedBamFile bamFile = indexFilterBam.outputBam
     }
 }

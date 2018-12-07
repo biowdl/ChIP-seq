@@ -11,6 +11,7 @@ workflow Sample {
         Sample sample
         String outputDir
         ChipSeqInput chipSeqInput
+        Int MAPQthreshold
     }
 
     scatter (library in sample.libraries) {
@@ -19,12 +20,12 @@ workflow Sample {
                 chipSeqInput = chipSeqInput,
                 outputDir = outputDir + "/lib_" + library.id,
                 sample = sample,
-                library = library
+                library = library,
+                MAPQthreshold = MAPQthreshold
         }
 
         File bam = libraryWorkflow.bamFile.file
     }
-
 
     call samtools.Merge as mergeBams {
         input:
