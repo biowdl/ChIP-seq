@@ -27,7 +27,6 @@ workflow Sample {
         File bam = libraryWorkflow.bamFile.file
     }
 
-
     call samtools.Merge as mergeBams {
         input:
             bamFiles = bam,

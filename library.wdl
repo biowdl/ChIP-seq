@@ -44,9 +44,9 @@ workflow Library {
     }
 
     call samtools.View as filterBam {
-    ## Remove reads unmapped, mate unmapped, not primary alignment, reads failing platform, duplicates (using
-    ## excludeFilter)
-    ## Remove multi-mapped reads (with MAPQthreshlod)
+        ## Remove reads unmapped, mate unmapped, not primary alignment, reads failing platform, duplicates (using
+        ## excludeFilter)
+        ## Remove multi-mapped reads (with MAPQthreshlod)
         input:
             inFile = markdup.outputBam.file,
             outputFileName = outputDir + "/" + sample.id + "-" + library.id + ".filtered.bam",
@@ -58,13 +58,6 @@ workflow Library {
         input:
             bamFile = filterBam.outputFile,
             bamIndexPath =  outputDir + "/" + sample.id + "-" + library.id + ".filtered.bai",
-    }
-
-    call bammetrics.BamMetrics as BamMetricsAfterFilter {
-        input:
-            bam = indexFilterBam.outputBam,
-            outputDir = outputDir + "/metricsAfterFilter",
-            reference = chipSeqInput.reference
     }
 
     output {
