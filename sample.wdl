@@ -40,7 +40,7 @@ workflow Sample {
     }
 
     ## Bamtobed call is different for SE and PE datasets
-    if (defined(sample.libraries.reads.R2)) {
+    if (defined(sample.libraries[0].readgroups[0].reads.R2)) {
         call bedtools.Bamtobed as peBamtobed {
             input:
                 inputBam = mergeBams.outputBam,
@@ -50,7 +50,7 @@ workflow Sample {
         }
     }
 
-    if (!defined(sample.libraries.reads.R2)) {
+    if (!defined(sample.libraries[0].readgroups[0].reads.R2)) {
         call bedtools.Bamtobed as seBamtobed {
             input:
                 inputBam = mergeBams.outputBam,
