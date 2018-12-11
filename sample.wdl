@@ -4,7 +4,7 @@ import "library.wdl" as libraryWorkflow
 import "structs.wdl" as structs
 import "tasks/common.wdl" as common
 import "tasks/samtools.wdl" as samtools
-
+import "tasks/bedtools.wdl" as bedtools
 
 workflow Sample {
     input {
@@ -39,7 +39,28 @@ workflow Sample {
             bamIndexPath = outputDir + "/" + sample.id + ".bai"
     }
 
+    ## Bamtobed call is different for SE and PE datasets
+    if (defined(sample.libraries.reads.R2)) {
+        call bedtools.Bamtobed as peBamtobed {
+            input:
+                inputBam = mergeBams.outputBam,
+                bedpe = true,
+                mate1 = true,
+                bedPath = outputDir + "/" + sample.id + ".bedpe"
+        }
+    }
+
+    if (!defined(sample.libraries.reads.R2)) {
+        call bedtools.Bamtobed as seBamtobed {
+            input:
+                inputBam = mergeBams.outputBam,
+                bedPath = outputDir + "/" + sample.id + ".bed"
+        }
+    }
+
     output {
         IndexedBamFile bamFile = indexBams.outputBam
+        ## One of the peBamtobed or seBamtobed will be called
+        File bedFile = select_first([peBamtobed.outputBed, seBamtobed.outputBed])
     }
 }

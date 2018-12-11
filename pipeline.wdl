@@ -34,6 +34,7 @@ workflow pipeline {
         File indexFiles = sampleTasks.bamFile.index
     }
 
+    ## TODO: We need to make CaseControl work with files other than bam files.
     call biopetSampleConfig.CaseControl as caseControl {
         input:
             inputFiles =  bamFiles,
