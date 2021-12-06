@@ -1,3 +1,4 @@
+version 1.0
 
 import "BamMetrics/bammetrics.wdl" as bammetrics
 import "structs.wdl" as structs

@@ -31,6 +31,7 @@ struct Readgroup {
 
 struct Sample {
     String id
+    String? control
     Array[Readgroup] readgroups
 }
 

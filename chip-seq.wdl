@@ -20,7 +20,7 @@ version 1.0
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import "sample.wdl" as sampleWorkflow
+import "sample.wdl" as sampleWf
 import "structs.wdl" as structs
 import "tasks/biowdl.wdl" as biowdl
 import "tasks/common.wdl" as common
@@ -97,18 +97,33 @@ workflow chipseq {
         }
 
     }
+    scatter (sample in sampleConfig.samples) {
+        if (defined(sample.control)) {
+            call common.GetSamplePositionInArray as controlPosition  {
+                input:
+                    sampleIds = sampleIds,
+                    sample = select_first([sample.control])
+            }
 
-    scatter (control in caseControl.caseControls.caseControls) {
-        call macs2.PeakCalling as peakcalling {
-            input:
-                inputBams = [control.inputFile.file],
-                inputBamsIndex = [control.inputFile.index],
-                controlBams = [control.controlFile.file],
-                controlBamsIndex = [control.controlFile.index],
-                outDir = outputDir + "/macs2",
-                sampleName = control.inputName
+            call common.GetSamplePositionInArray as casePosition  {
+                input:
+                    sampleIds = sampleIds,
+                    sample = sample.id,
+                    dockerImage = dockerImages["python"]
+            }
+
+            call macs2.PeakCalling as peakcalling {
+                input:
+                    inputBams = [sampleWorkflow.markdupBam[casePosition.position]],
+                    inputBamsIndex = [sampleWorkflow.markdupBamIndex[casePosition.position]],
+                    controlBams = [sampleWorkflow.markdupBam[controlPosition.position]],
+                    controlBamsIndex = [sampleWorkflow.markdupBamIndex[controlPosition.position]],
+                    outDir = outputDir + "/macs2",
+                    sampleName = sample.id
+            }
         }
     }
+
 
 
     Array[File] allReports = flatten(sampleWorkflow.reports)
@@ -124,24 +139,8 @@ workflow chipseq {
         File dockerImagesList = convertDockerImagesFile.json
         File multiqcReport = multiqcTask.multiqcReport
         Array[File] reports = allReports
-        File? multiSampleVcf = JointGenotyping.multisampleVcf
-        File? multisampleVcfIndex = JointGenotyping.multisampleVcfIndex
-        File? multisampleGVcf = JointGenotyping.multisampleGVcf
-        File? multisampleGVcfIndex = JointGenotyping.multisampleGVcfIndex
-        Array[File] singleSampleVcfs = if jointgenotyping then [] else select_all(singleSampleCalling.outputVcf)
-        Array[File] singleSampleVcfsIndex = if jointgenotyping then [] else select_all(singleSampleCalling.outputVcfIndex)
-        Array[File] singleSampleGvcfs = if jointgenotyping then select_all(singleSampleCalling.outputVcf) else []
-        Array[File] singleSampleGvcfsIndex = if jointgenotyping then select_all(singleSampleCalling.outputVcfIndex) else []
-        Array[File] recalibratedBams = sampleWorkflow.recalibratedBam
-        Array[File] recalibratedBamIndexes = sampleWorkflow.recalibratedBamIndex
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
-        Array[File?] cleverVCFs = svCalling.cleverVcf
-        Array[File?] matecleverVCFs = svCalling.cleverVcf
-        Array[File?] mantaVCFs = svCalling.mantaVcf
-        Array[File?] dellyVCFs = svCalling.dellyVcf
-        Array[File?] survivorVCFs = svCalling.survivorVcf
-        Array[Array[File]?] modifiedVcfs = svCalling.modifiedVcfs
     }
 
     parameter_meta {
@@ -196,4 +195,3 @@ workflow chipseq {
         modifiedVcfs: {description: ""}
     }
 }
-
