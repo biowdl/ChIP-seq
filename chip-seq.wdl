@@ -141,6 +141,7 @@ workflow chipseq {
         Array[File] reports = allReports
         Array[File] markdupBams = sampleWorkflow.markdupBam
         Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
+        Array[File] peakFile = select_all(peakcalling.peakFile)
     }
 
     parameter_meta {
