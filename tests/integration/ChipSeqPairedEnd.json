@@ -14,5 +14,6 @@
       "tests/data/reference/reference.fasta.sa"
     ]
   },
-  "ChipSeq.bwaThreads": 1
+  "ChipSeq.bwaThreads": 1,
+  "ChipSeq.peakcalling.nomodel": true
 }
