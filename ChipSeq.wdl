@@ -27,7 +27,7 @@ import "tasks/common.wdl" as common
 import "tasks/multiqc.wdl" as multiqc
 import "tasks/macs2.wdl" as macs2
 
-workflow chipseq {
+workflow ChipSeq {
     input {
         File sampleConfigFile
         String outputDir = "."

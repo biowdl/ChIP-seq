@@ -15,13 +15,10 @@ workflow SampleWorkflow {
         File referenceFasta
         File referenceFastaFai
         File referenceFastaDict
-        File dbsnpVCF
-        File dbsnpVCFIndex
         Boolean umiDeduplication
         Boolean collectUmiStats
         String platform = "illumina"
         Boolean useBwaKit = false
-        Array[File] scatters
 
         BwaIndex? bwaIndex
         BwaIndex? bwaMem2Index

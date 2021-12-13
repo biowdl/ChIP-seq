@@ -1,0 +1,6 @@
+- name: ChipseqPairedEnd
+  tags:
+    - single
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/ChipseqPairedEnd.json ChipSeq.wdl
