@@ -47,6 +47,8 @@ workflow ChipSeq {
         Boolean umiDeduplication = false
         Boolean collectUmiStats = false
         File dockerImagesFile
+
+        Int MAPQthreshold = 30
     }
 
     meta {
@@ -93,7 +95,8 @@ workflow ChipSeq {
                 bwaThreads = bwaThreads,
                 platform = platform,
                 umiDeduplication = umiDeduplication,
-                collectUmiStats = collectUmiStats
+                collectUmiStats = collectUmiStats,
+                MAPQthreshold = MAPQthreshold
         }
 
     }
@@ -114,10 +117,10 @@ workflow ChipSeq {
 
             call macs2.PeakCalling as peakcalling {
                 input:
-                    inputBams = [sampleWorkflow.markdupBam[casePosition.position]],
-                    inputBamsIndex = [sampleWorkflow.markdupBamIndex[casePosition.position]],
-                    controlBams = [sampleWorkflow.markdupBam[controlPosition.position]],
-                    controlBamsIndex = [sampleWorkflow.markdupBamIndex[controlPosition.position]],
+                    inputBams = [sampleWorkflow.filteredBam[casePosition.position]],
+                    inputBamsIndex = [sampleWorkflow.filteredBamIndex[casePosition.position]],
+                    controlBams = [sampleWorkflow.filteredBam[controlPosition.position]],
+                    controlBamsIndex = [sampleWorkflow.filteredBamIndex[controlPosition.position]],
                     outDir = outputDir + "/macs2",
                     sampleName = sample.id
             }
@@ -139,8 +142,8 @@ workflow ChipSeq {
         File dockerImagesList = convertDockerImagesFile.json
         File multiqcReport = multiqcTask.multiqcReport
         Array[File] reports = allReports
-        Array[File] markdupBams = sampleWorkflow.markdupBam
-        Array[File] markdupBamIndexes = sampleWorkflow.markdupBamIndex
+        Array[File] filteredBams = sampleWorkflow.filteredBam
+        Array[File] filteredBamIndexes = sampleWorkflow.filteredBamIndex
         Array[File] peakFile = select_all(peakcalling.peakFile)
     }
 
@@ -186,8 +189,8 @@ workflow ChipSeq {
         singleSampleGvcfsIndex: {description: ""}
         recalibratedBams: {description: ""}
         recalibratedBamIndexes: {description: ""}
-        markdupBams: {description: ""}
-        markdupBamIndexes: {description: ""}
+        filteredBams: {description: ""}
+        filteredBamIndexes: {description: ""}
         cleverVCFs: {description: ""}
         matecleverVCFs: {description: ""}
         mantaVCFs: {description: ""}

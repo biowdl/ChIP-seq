@@ -5,6 +5,7 @@ import "structs.wdl" as structs
 import "tasks/bwa.wdl" as bwa
 import "tasks/bwa-mem2.wdl" as bwamem2
 import "tasks/sambamba.wdl" as sambamba
+import "tasks/samtools.wdl" as samtools
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
 
@@ -27,6 +28,7 @@ workflow SampleWorkflow {
 
         Int bwaThreads = 4
         Map[String, String] dockerImages
+        Int MAPQthreshold
 
         String? DONOTDEFINE
     }
@@ -91,11 +93,22 @@ workflow SampleWorkflow {
             dockerImage = dockerImages["sambamba"]
     }
 
+    call samtools.View as filterBam {
+        ## Remove reads unmapped, mate unmapped, not primary alignment, reads failing platform, duplicates (using
+        ## excludeFilter)
+        ## Remove multi-mapped reads (with MAPQthreshlod)
+        input:
+            inFile = markdup.outputBam,
+            outputFileName = sampleDir + "/" + sample.id + ".filtered.bam",
+            excludeFilter = 1804,
+            MAPQthreshold = MAPQthreshold
+    }
+
     if (umiDeduplication) {
         call umiTools.Dedup as umiDedup {
             input:
-                inputBam = markdup.outputBam,
-                inputBamIndex = markdup.outputBamIndex,
+                inputBam = filterBam.outputBam,
+                inputBamIndex = filterBam.outputBamIndex,
                 outputBamPath = sampleDir + "/" + sample.id + ".dedup.bam",
                 tmpDir = sampleDir + "/" + sample.id + "_tmp",
                 statsPrefix = if collectUmiStats
@@ -109,8 +122,8 @@ workflow SampleWorkflow {
 
     call bammetrics.BamMetrics as metrics {
         input:
-            bam = select_first([umiDedup.deduppedBam, markdup.outputBam]),
-            bamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex]),
+            bam = select_first([umiDedup.deduppedBam, filterBam.outputBam]),
+            bamIndex = select_first([umiDedup.deduppedBamIndex, filterBam.outputBamIndex]),
             outputDir = sampleDir,
             referenceFasta = referenceFasta,
             referenceFastaFai = referenceFastaFai,
@@ -119,8 +132,8 @@ workflow SampleWorkflow {
     }
 
     output {
-        File markdupBam = select_first([umiDedup.deduppedBam, markdup.outputBam])
-        File markdupBamIndex = select_first([umiDedup.deduppedBamIndex, markdup.outputBamIndex])
+        File filteredBam = select_first([umiDedup.deduppedBam, filterBam.outputBam])
+        File filteredBamIndex = select_first([umiDedup.deduppedBamIndex, filterBam.outputBamIndex])
         File? umiEditDistance = umiDedup.editDistance
         File? umiStats = umiDedup.umiStats
         File? umiPositionStats = umiDedup.positionStats
