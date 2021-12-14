@@ -154,19 +154,11 @@ workflow ChipSeq {
         referenceFasta: {description: "The reference fasta file.", category: "required" }
         referenceFastaFai: {description: "Fasta index (.fai) file of the reference.", category: "required" }
         referenceFastaDict: {description: "Sequence dictionary (.dict) file of the reference.", category: "required" }
-        dbsnpVCF: {description: "dbsnp VCF file used for checking known sites.", category: "required"}
-        dbsnpVCFIndex: {description: "Index (.tbi) file for the dbsnp VCF.", category: "required"}
-        jointgenotyping: {description: "Whether to perform jointgenotyping (using HaplotypeCaller to call GVCFs and merge them with GenotypeGVCFs) or not.", category: "common"}
-        singleSampleGvcf: {description: "Whether to output single-sample gvcfs.", category: "common"}
         platform: {description: "The platform used for sequencing.", category: "advanced"}
         useBwaKit: {description: "Whether or not BWA kit should be used. If false BWA mem will be used.", category: "advanced"}
         scatterSizeMillions:{description: "Same as scatterSize, but is multiplied by 1000000 to get scatterSize. This allows for setting larger values more easily.", category: "advanced"}
-        runSVcalling: {description: "Whether or not Structural-variantcalling should be run.", category: "advanced"}
         bwaIndex: {description: "The BWA index files. When these are provided BWA will be used.", category: "common"}
         bwaMem2Index: {description: "The bwa-mem2 index files. When these are provided bwa-mem2 will be used.", category: "common"}
-        regions: {description: "A bed file describing the regions to call variants for.", category: "common"}
-        XNonParRegions: {description: "Bed file with the non-PAR regions of X.", category: "common"}
-        YNonParRegions: {description: "Bed file with the non-PAR regions of Y.", category: "common"}
         adapterForward: {description: "The adapter to be removed from the reads first or single end reads.", category: "common"}
         adapterReverse: {description: "The adapter to be removed from the reads second end reads.", category: "common"}
         scatterSize: {description: "The size of the scattered regions in bases for the GATK subworkflows. Scattering is used to speed up certain processes. The genome will be seperated into multiple chunks (scatters) which will be processed in their own job, allowing for parallel processing. Higher values will result in a lower number of jobs. The optimal value here will depend on the available resources.", category: "advanced"}
@@ -174,28 +166,13 @@ workflow ChipSeq {
         dockerImagesFile: {description: "A YAML file describing the docker image used for the tasks. The dockerImages.yml provided with the pipeline is recommended.", category: "advanced"}
         umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
         collectUmiStats: {description: "Whether or not UMI deduplication stats should be collected. This will potentially cause a massive increase in memory usage of the deduplication step.", category: "advanced"}
+        MAPQthreshold: {description: "The mapping quality treshold to filter the BAM files on"}
 
         # outputs
         dockerImagesList: {description: "Json file describing the docker images used by the pipeline."}
-        multiqcReport: {description: ""}
-        reports: {description: ""}
-        multiSampleVcf: {description: ""}
-        multisampleVcfIndex: {description: ""}
-        multisampleGVcf: {description: ""}
-        multisampleGVcfIndex: {description: ""}
-        singleSampleVcfs: {description: ""}
-        singleSampleVcfsIndex: {description: ""}
-        singleSampleGvcfs: {description: ""}
-        singleSampleGvcfsIndex: {description: ""}
-        recalibratedBams: {description: ""}
-        recalibratedBamIndexes: {description: ""}
+        multiqcReport: {description: "The MultiQC report for this pipeline."}
+        reports: {description: "All pipeline reports for this pipeline."}
         filteredBams: {description: ""}
         filteredBamIndexes: {description: ""}
-        cleverVCFs: {description: ""}
-        matecleverVCFs: {description: ""}
-        mantaVCFs: {description: ""}
-        dellyVCFs: {description: ""}
-        survivorVCFs: {description: ""}
-        modifiedVcfs: {description: ""}
     }
 }
