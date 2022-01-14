@@ -15,5 +15,6 @@
     ]
   },
   "ChipSeq.bwaThreads": 1,
-  "ChipSeq.peakcalling.nomodel": true
+  "ChipSeq.peakcalling.nomodel": true,
+  "ChipSeq.peakcalling.format": "BAMPE"
 }
