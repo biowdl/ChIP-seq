@@ -49,6 +49,7 @@ workflow ChipSeq {
         File dockerImagesFile
 
         Int MAPQthreshold = 30
+        File? excludeRegions
     }
 
     meta {
@@ -96,7 +97,8 @@ workflow ChipSeq {
                 platform = platform,
                 umiDeduplication = umiDeduplication,
                 collectUmiStats = collectUmiStats,
-                MAPQthreshold = MAPQthreshold
+                MAPQthreshold = MAPQthreshold,
+                excludeRegions = excludeRegions
         }
 
     }
