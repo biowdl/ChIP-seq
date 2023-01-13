@@ -2,4 +2,4 @@
 "chipseq1","lib1","rg1",chipseq1control,"tests/data/sample1_R1.fastq.gz","d538c6e674b7152cf201a10dd75f08e8","tests/data/sample1_R2.fastq.gz","9b662817e93a625642e312f595c1d7e0"
 "chipseq1control","lib1","rg1",,"tests/data/sample1Con_R1.fastq.gz","8e475aa9239be5188f4850e989765dc3","tests/data/sample1Con_R2.fastq.gz","a51c245c4e8790695d5299728e07360e"
 "chipseq2","lib1","rg1",chipseq2control,"tests/data/sample2_R1.fastq.gz","cf07fa018c049a0ca97f91f0e5b958a2","tests/data/sample2_R2.fastq.gz","74d30ded0d64bcb60ccbff3a390453b4"
-"chipseq2control","lib1","rg1",,"tests/data/sample1_R1.fastq.gz","8e475aa9239be5188f4850e989765dc3","tests/data/sample1_R2.fastq.gz","a51c245c4e8790695d5299728e07360e"
+"chipseq2control","lib1","rg1",,"tests/data/sample2Con_R1.fastq.gz","8e475aa9239be5188f4850e989765dc3","tests/data/sample2Con_R2.fastq.gz","a51c245c4e8790695d5299728e07360e"
