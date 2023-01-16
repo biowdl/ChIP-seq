@@ -28,6 +28,7 @@ import "tasks/sambamba.wdl" as sambamba
 import "tasks/samtools.wdl" as samtools
 import "QC/QC.wdl" as qc
 import "tasks/umi-tools.wdl" as umiTools
+import "tasks/bedtools.wdl" as bedtools
 
 workflow SampleWorkflow {
     input {
@@ -49,6 +50,8 @@ workflow SampleWorkflow {
         Int bwaThreads = 4
         Map[String, String] dockerImages
         Int MAPQthreshold
+
+        File? excludeRegions
 
         String? DONOTDEFINE
     }
@@ -113,6 +116,17 @@ workflow SampleWorkflow {
             dockerImage = dockerImages["sambamba"]
     }
 
+
+    if (defined(excludeRegions)) {
+        call bedtools.Complement as inverseBed {
+            input:
+                inputBed = select_first([excludeRegions]),
+                faidx = referenceFastaFai,
+                outputBed = "include_regions.bed",
+                dockerImage = dockerImages["bedtools"]
+        }
+        File includeRegions = inverseBed.complementBed
+    }
     call samtools.View as filterBam {
         ## Remove reads unmapped, mate unmapped, not primary alignment, reads failing platform, duplicates (using
         ## excludeFilter)
@@ -121,7 +135,8 @@ workflow SampleWorkflow {
             inFile = markdup.outputBam,
             outputFileName = sampleDir + "/" + sample.id + ".filtered.bam",
             excludeFilter = 1804,
-            MAPQthreshold = MAPQthreshold
+            MAPQthreshold = MAPQthreshold,
+            targetFile = includeRegions,
     }
 
     if (umiDeduplication) {
@@ -183,6 +198,7 @@ workflow SampleWorkflow {
         umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
         collectUmiStats: {description: "Whether or not UMI stats collection should be performed.", category: "common"}
         MAPQthreshold: {description: "The mapping quality treshold to filter the BAM files on"}
+        excludeRegions: {description: "Regions to exclude from the analysis"}
 
         # outputs
         markdupBam: {description: ""}
