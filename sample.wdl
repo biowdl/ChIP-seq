@@ -198,6 +198,7 @@ workflow SampleWorkflow {
         umiDeduplication: {description: "Whether or not UMI based deduplication should be performed.", category: "common"}
         collectUmiStats: {description: "Whether or not UMI stats collection should be performed.", category: "common"}
         MAPQthreshold: {description: "The mapping quality treshold to filter the BAM files on"}
+        excludeRegions: {description: "Regions to exclude from the analysis"}
 
         # outputs
         markdupBam: {description: ""}
