@@ -103,29 +103,31 @@ workflow ChipSeq {
 
     }
     scatter (sample in sampleConfig.samples) {
+        call common.GetSamplePositionInArray as casePosition  {
+            input:
+                sampleIds = sampleIds,
+                sample = sample.id,
+                dockerImage = dockerImages["python"]
+        }
+
         if (defined(sample.control)) {
             call common.GetSamplePositionInArray as controlPosition  {
                 input:
                     sampleIds = sampleIds,
                     sample = select_first([sample.control])
             }
+            File controlBam = sampleWorkflow.filteredBam[controlPosition.position]
+            File controlBamIndex = sampleWorkflow.filteredBamIndex[controlPosition.position]
+        }
 
-            call common.GetSamplePositionInArray as casePosition  {
-                input:
-                    sampleIds = sampleIds,
-                    sample = sample.id,
-                    dockerImage = dockerImages["python"]
-            }
-
-            call macs2.PeakCalling as peakcalling {
-                input:
-                    inputBams = [sampleWorkflow.filteredBam[casePosition.position]],
-                    inputBamsIndex = [sampleWorkflow.filteredBamIndex[casePosition.position]],
-                    controlBams = [sampleWorkflow.filteredBam[controlPosition.position]],
-                    controlBamsIndex = [sampleWorkflow.filteredBamIndex[controlPosition.position]],
-                    outDir = outputDir + "/macs2",
-                    sampleName = sample.id
-            }
+        call macs2.PeakCalling as peakcalling {
+            input:
+                inputBams = [sampleWorkflow.filteredBam[casePosition.position]],
+                inputBamsIndex = [sampleWorkflow.filteredBamIndex[casePosition.position]],
+                controlBams = select_all([controlBam]),
+                controlBamsIndex =  select_all([controlBamIndex]),
+                outDir = outputDir + "/macs2",
+                sampleName = sample.id
         }
     }
 

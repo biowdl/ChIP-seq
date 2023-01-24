@@ -4,3 +4,17 @@
   command: >-
     cromwell run -o tests/cromwell_options.json
     -i tests/integration/ChipSeqPairedEnd.json ChipSeq.wdl
+  files:
+    - path: test-output/macs2/chipseq1_peaks.narrowPeak
+    - path: test-output/macs2/chipseq2_peaks.narrowPeak
+
+- name: ChipSeqPairedEndNoControl
+  tags:
+    - single
+    - nocontrol
+  command: >-
+    cromwell run -o tests/cromwell_options.json
+    -i tests/integration/ChipSeqPairedEndNoControl.json ChipSeq.wdl
+  files:
+    - path: test-output/macs2/chipseq1_peaks.narrowPeak
+    - path: test-output/macs2/chipseq2_peaks.narrowPeak

@@ -1,0 +1,21 @@
+{
+  "ChipSeq.sampleConfigFile": "tests/samplesheets/PairedEndNoControl.csv",
+  "ChipSeq.dockerImagesFile": "dockerImages.yml",
+  "ChipSeq.referenceFasta": "tests/data/reference/reference.fasta",
+  "ChipSeq.referenceFastaFai": "tests/data/reference/reference.fasta.fai",
+  "ChipSeq.referenceFastaDict": "tests/data/reference/reference.dict",
+  "ChipSeq.bwaIndex": {
+    "fastaFile": "tests/data/reference/reference.fasta",
+    "indexFiles": [
+      "tests/data/reference/reference.fasta.amb",
+      "tests/data/reference/reference.fasta.ann",
+      "tests/data/reference/reference.fasta.bwt",
+      "tests/data/reference/reference.fasta.pac",
+      "tests/data/reference/reference.fasta.sa"
+    ]
+  },
+  "ChipSeq.bwaThreads": 1,
+  "ChipSeq.peakcalling.nomodel": true,
+  "ChipSeq.peakcalling.format": "BAMPE",
+  "ChipSeq.excludeRegions": "tests/data/exclude_regions.bed"
+}
