@@ -11,6 +11,7 @@ that users understand how the changes affect the new version.
 
 version 1.0.0-dev
 ---------------------------
++ Update tasks with bug fix
 + Update tasks so latest macs2.wdl is included
 + Macs2 Peakcalling will also be called for samples without a control.
 + Add an option to exclude regions
